@@ -11,6 +11,7 @@ const Header = () => {
                     justifyContent: 'center',
                     padding: '20px',
                     marginBottom: '0px',
+                    flexDirection: { xs: 'column', sm: 'row' }
                 }}
             >
                 {/* GDG Logo */}
@@ -21,7 +22,7 @@ const Header = () => {
                 />
 
                 {/* GDG Heading */}
-                <Box>
+                <Box textAlign={{ xs: 'center', sm: 'left' }}>
                     <Typography
                         variant="h4"
                         component="h1"
@@ -75,3 +76,5 @@ const Header = () => {
 };
 
 export default Header;
+
+
