@@ -1,0 +1,19 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Apply Poppins font to the body */
+}
+
+.MuiDataGrid-root {
+    font-family: 'Poppins', sans-serif;
+    /* Apply to DataGrid */
+}
+
+.MuiMenuItem-root {
+    font-family: 'Poppins', sans-serif;
+    /* Apply to MenuItems */
+}
+
+.MuiSelect-root {
+    font-family: 'Poppins', sans-serif;
+    /* Apply to Select */
+}
