@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar, GridToolbarColumnsButton, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import Papa from 'papaparse';
-import { Box, MenuItem, Select } from '@mui/material';
+import { Box, Grid, MenuItem, Select, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import TableSkeleton from './TableSkeleton';
@@ -9,6 +9,10 @@ import TableSkeleton from './TableSkeleton';
 const Dashboard = () => {
     const [jsonData, setJsonData] = useState([]);
     const [columns, setColumns] = useState([]);
+    const [redeemedCount, setRedeemedCount] = useState(0);
+    const [notRedeemedCount, setNotRedeemedCount] = useState(0);
+    const [inactiveCount, setInactiveCount] = useState(0);
+    const [active, setActiveCount] = useState(0);
 
     const csvFilePath = '/test.csv';
 
@@ -22,7 +26,28 @@ const Dashboard = () => {
                     header: true,
                     skipEmptyLines: true,
                     complete: function (result) {
-                        setJsonData(result.data);
+                        const data = result.data;
+                        setJsonData(data);
+
+                        let redeemed = 0, notRedeemed = 0, inactive = 0, active = 0;
+
+                        data.forEach((row) => {
+                            if (row["Access Code Redemption Status"] === "Yes") {
+                                redeemed++;
+                                if (!row["Names of Completed Skill Badges"] || row["Names of Completed Skill Badges"].trim() === "") {
+                                    inactive++;
+                                } else {
+                                    active++;
+                                }
+                            } else if (row["Access Code Redemption Status"] === "No") {
+                                notRedeemed++;
+                            }
+                        });
+
+                        setRedeemedCount(redeemed);
+                        setNotRedeemedCount(notRedeemed);
+                        setInactiveCount(inactive);
+                        setActiveCount(active);
 
                         const columns = Object.keys(result.data[0] || {}).map((key) => ({
                             field: key,
@@ -83,6 +108,28 @@ const Dashboard = () => {
                                         <CancelIcon sx={{ color: 'red' }} />
                                     );
                                 }
+
+                                if (key === "User Name") {
+                                    // Conditionally style based on redemption status and badge completion
+                                    const redemptionStatus = params.row['Access Code Redemption Status'];
+                                    const completedBadges = params.row['Names of Completed Skill Badges'];
+
+                                    let textColor = 'black'; // Default color
+                                    if (redemptionStatus === 'Yes' && completedBadges) {
+                                        textColor = 'green'; // Active
+                                    } else if (redemptionStatus === 'Yes' && !completedBadges) {
+                                        textColor = 'orange'; // Redeemed but Inactive
+                                    } else if (redemptionStatus === 'No') {
+                                        textColor = 'red'; // Not Redeemed
+                                    }
+
+                                    return (
+                                        <span style={{ color: textColor, fontFamily: 'Poppins, sans-serif' }}>
+                                            {params.value}
+                                        </span>
+                                    );
+                                }
+
                                 return params.value;
                             },
                         }));
@@ -99,6 +146,41 @@ const Dashboard = () => {
 
     return (
         <div style={{ height: 650, width: '100%', fontFamily: 'Poppins, sans-serif' }}>
+
+            <Box sx={{ marginBottom: 2 }}>
+                <Grid container spacing={1} justifyContent="flex-end">
+                    <Grid item xs={6} sm={1}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'green', textAlign: 'right' }}>
+                            Active: {active}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} sm={1.2}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', textAlign: 'right' }}>
+                            Redeemed: {redeemedCount}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} sm={1.2}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'orange', textAlign: 'right' }}>
+                            Redeemed but Inactive: {inactiveCount}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} sm={1.4}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'red', textAlign: 'right' }}>
+                            Not Redeemed: {notRedeemedCount}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Box>
+
+
             {jsonData.length > 0 ? (
                 <DataGrid
                     rows={jsonData.map((row, index) => ({ id: index, ...row }))}
