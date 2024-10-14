@@ -13,6 +13,7 @@ const Dashboard = () => {
     const [notRedeemedCount, setNotRedeemedCount] = useState(0);
     const [inactiveCount, setInactiveCount] = useState(0);
     const [active, setActiveCount] = useState(0);
+    const [completedCount, setCompletedCount] = useState(0);
 
     const csvFilePath = '/test.csv';
 
@@ -29,7 +30,7 @@ const Dashboard = () => {
                         const data = result.data;
                         setJsonData(data);
 
-                        let redeemed = 0, notRedeemed = 0, inactive = 0, active = 0;
+                        let redeemed = 0, notRedeemed = 0, inactive = 0, active = 0, completed = 0;
 
                         data.forEach((row) => {
                             if (row["Access Code Redemption Status"] === "Yes") {
@@ -42,12 +43,15 @@ const Dashboard = () => {
                             } else if (row["Access Code Redemption Status"] === "No") {
                                 notRedeemed++;
                             }
+                            if (row['All Skill Badges & Games Completed'] === "Yes")
+                                completed++;
                         });
 
                         setRedeemedCount(redeemed);
                         setNotRedeemedCount(notRedeemed);
                         setInactiveCount(inactive);
                         setActiveCount(active);
+                        setCompletedCount(completed);
 
                         const columns = Object.keys(result.data[0] || {}).map((key) => ({
                             field: key,
@@ -113,6 +117,7 @@ const Dashboard = () => {
                                     // Conditionally style based on redemption status and badge completion
                                     const redemptionStatus = params.row['Access Code Redemption Status'];
                                     const completedBadges = params.row['Names of Completed Skill Badges'];
+                                    const completedOrNot = params.row['All Skill Badges & Games Completed'] === "Yes";
 
                                     let textColor = 'black'; // Default color
                                     if (redemptionStatus === 'Yes' && completedBadges) {
@@ -124,10 +129,16 @@ const Dashboard = () => {
                                     }
 
                                     return (
-                                        <span style={{ color: textColor, fontFamily: 'Poppins, sans-serif' }}>
-                                            {params.value}
-                                        </span>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            {completedOrNot && (
+                                                <CheckCircleIcon sx={{ color: 'green', marginRight: '8px' }} /> // Add tick mark if all badges are completed
+                                            )}
+                                            <span style={{ color: textColor, fontFamily: 'Poppins, sans-serif' }}>
+                                                {params.value}
+                                            </span>
+                                        </div>
                                     );
+
                                 }
 
                                 return params.value;
@@ -150,6 +161,13 @@ const Dashboard = () => {
             <Box sx={{ marginBottom: 2 }}>
                 <Grid container spacing={1} justifyContent="flex-end">
                     <Grid item xs={6} sm={1}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'green', textAlign: 'right' }}>
+                            Completed: {completedCount}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} sm={0.8}>
                         <Typography
                             variant="h6"
                             sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'green', textAlign: 'right' }}>
