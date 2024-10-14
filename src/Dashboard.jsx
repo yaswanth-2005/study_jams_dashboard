@@ -28,11 +28,17 @@ const Dashboard = () => {
                     skipEmptyLines: true,
                     complete: function (result) {
                         const data = result.data;
-                        setJsonData(data);
+
+                        // Sorting: Put the rows with 'All Skill Badges & Games Completed' as "Yes" at the top
+                        const sortedData = [...data].sort((a, b) => {
+                            return b['All Skill Badges & Games Completed'] === "Yes" ? 1 : -1;
+                        });
+
+                        setJsonData(sortedData);
 
                         let redeemed = 0, notRedeemed = 0, inactive = 0, active = 0, completed = 0;
 
-                        data.forEach((row) => {
+                        sortedData.forEach((row) => {
                             if (row["Access Code Redemption Status"] === "Yes") {
                                 redeemed++;
                                 if (!row["Names of Completed Skill Badges"] || row["Names of Completed Skill Badges"].trim() === "") {
@@ -114,24 +120,23 @@ const Dashboard = () => {
                                 }
 
                                 if (key === "User Name") {
-                                    // Conditionally style based on redemption status and badge completion
                                     const redemptionStatus = params.row['Access Code Redemption Status'];
                                     const completedBadges = params.row['Names of Completed Skill Badges'];
                                     const completedOrNot = params.row['All Skill Badges & Games Completed'] === "Yes";
 
-                                    let textColor = 'black'; // Default color
+                                    let textColor = 'black';
                                     if (redemptionStatus === 'Yes' && completedBadges) {
-                                        textColor = 'green'; // Active
+                                        textColor = 'green';
                                     } else if (redemptionStatus === 'Yes' && !completedBadges) {
-                                        textColor = 'orange'; // Redeemed but Inactive
+                                        textColor = 'orange';
                                     } else if (redemptionStatus === 'No') {
-                                        textColor = 'red'; // Not Redeemed
+                                        textColor = 'red';
                                     }
 
                                     return (
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             {completedOrNot && (
-                                                <CheckCircleIcon sx={{ color: 'green', marginRight: '8px' }} /> // Add tick mark if all badges are completed
+                                                <CheckCircleIcon sx={{ color: 'green', marginRight: '8px' }} />
                                             )}
                                             <span style={{ color: textColor, fontFamily: 'Poppins, sans-serif' }}>
                                                 {params.value}
@@ -155,48 +160,79 @@ const Dashboard = () => {
         fetchCsvAndConvert();
     }, []);
 
+
     return (
         <div style={{ height: 650, width: '100%', fontFamily: 'Poppins, sans-serif' }}>
 
             <Box sx={{ marginBottom: 2 }}>
                 <Grid container spacing={1} justifyContent="flex-end">
-                    <Grid item xs={6} sm={1}>
+                    <Grid item xs={6} sm={2} md={1.3}>
                         <Typography
-                            variant="h6"
-                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'green', textAlign: 'right' }}>
+                            variant="subtitle2"
+                            sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                color: 'green',
+                                textAlign: 'center',
+                                fontSize: { xs: '12px', sm: '14px', md: '14px' } // Responsive font size
+                            }}
+                        >
                             Completed: {completedCount}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} sm={0.8}>
+                    <Grid item xs={6} sm={2} md={1.3}>
                         <Typography
-                            variant="h6"
-                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'green', textAlign: 'right' }}>
+                            variant="subtitle2"
+                            sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                color: 'green',
+                                textAlign: 'center',
+                                fontSize: { xs: '12px', sm: '14px', md: '14px' }
+                            }}
+                        >
                             Active: {active}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} sm={1.2}>
+                    <Grid item xs={6} sm={2} md={1.3}>
                         <Typography
-                            variant="h6"
-                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', textAlign: 'right' }}>
+                            variant="subtitle2"
+                            sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                textAlign: 'center',
+                                fontSize: { xs: '12px', sm: '14px', md: '14px' }
+                            }}
+                        >
                             Redeemed: {redeemedCount}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} sm={1.2}>
+                    <Grid item xs={6} sm={2} md={1.3}>
                         <Typography
-                            variant="h6"
-                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'orange', textAlign: 'right' }}>
+                            variant="subtitle2"
+                            sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                color: 'orange',
+                                textAlign: 'center',
+                                fontSize: { xs: '12px', sm: '14px', md: '14px' }
+                            }}
+                        >
                             Redeemed but Inactive: {inactiveCount}
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} sm={1.4}>
+                    <Grid item xs={6} sm={2} md={1.3}>
                         <Typography
-                            variant="h6"
-                            sx={{ fontSize: '14px', fontFamily: 'Poppins, sans-serif', color: 'red', textAlign: 'right' }}>
+                            variant="subtitle2"
+                            sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                color: 'red',
+                                textAlign: 'center',
+                                fontSize: { xs: '12px', sm: '14px', md: '14px' }
+                            }}
+                        >
                             Not Redeemed: {notRedeemedCount}
                         </Typography>
                     </Grid>
                 </Grid>
             </Box>
+
 
 
             {jsonData.length > 0 ? (

@@ -14,14 +14,12 @@ const Header = () => {
                     flexDirection: { xs: 'column', sm: 'row' }
                 }}
             >
-                {/* GDG Logo */}
                 <img
                     src='/gdg.png'
                     alt="GDG Logo"
                     style={{ width: '100px', marginRight: '20px' }}
                 />
 
-                {/* GDG Heading */}
                 <Box textAlign={{ xs: 'center', sm: 'left' }}>
                     <Typography
                         variant="h4"
@@ -41,7 +39,7 @@ const Header = () => {
                         sx={{
                             fontFamily: 'Poppins, sans-serif',
                             color: 'blue',
-                            marginTop: '8px', // Space between headings
+                            marginTop: '8px',
                         }}
                     >
                         Vishnu Institute of Technology
