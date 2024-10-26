@@ -301,7 +301,7 @@ const Dashboard = () => {
                 fontSize: { xs: "12px", sm: "14px", md: "14px" },
               }}
             >
-              Not Redeemed: {notRedeemedCount}
+              Black Listed: {notRedeemedCount}
             </Typography>
           </Grid>
         </Grid>
