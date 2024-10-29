@@ -12,6 +12,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TableSkeleton from "./TableSkeleton";
 import { InfoRounded } from "@mui/icons-material";
+import CountdownTimer from "./CountdownTimer";
+import ClosableBanner from "./ClosableBanner";
 
 const Dashboard = () => {
   const [jsonData, setJsonData] = useState([]);
@@ -200,6 +202,8 @@ const Dashboard = () => {
     <div
       style={{ height: 650, width: "100%", fontFamily: "Poppins, sans-serif" }}
     >
+      <ClosableBanner currentUsers={completedCount} />
+      <CountdownTimer />
       <Box
         sx={{
           backgroundColor: "#f0f0f0",
