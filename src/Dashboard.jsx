@@ -79,6 +79,7 @@ const Dashboard = () => {
               field: key,
               headerName: key.charAt(0).toUpperCase() + key.slice(1),
               width: key === "Names of Completed Skill Badges" ? 250 : 150,
+              type: key === "# of Skill Badges Completed" ? "number" : "string",
               renderCell: (params) => {
                 if (key === "Names of Completed Skill Badges") {
                   const badges = params.value ? params.value.split("|") : [];
@@ -187,6 +188,7 @@ const Dashboard = () => {
                 return params.value;
               },
             }));
+
             setColumns(columns);
           },
         });
