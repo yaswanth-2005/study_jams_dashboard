@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 const CountdownTimer = () => {
   // Set the target date (31st October)
-  const targetDate = new Date("2024-10-31T23:59:59").getTime();
+  const targetDate = new Date("2024-11-01T17:59:59").getTime();
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
