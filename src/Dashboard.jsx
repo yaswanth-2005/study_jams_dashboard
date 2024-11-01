@@ -204,7 +204,7 @@ const Dashboard = () => {
     <div
       style={{ height: 650, width: "100%", fontFamily: "Poppins, sans-serif" }}
     >
-      <ClosableBanner currentUsers={completedCount} />
+      {/* <ClosableBanner currentUsers={completedCount} /> */}
       <CountdownTimer />
       <Box
         sx={{
