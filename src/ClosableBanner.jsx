@@ -12,17 +12,17 @@ const slideDown = keyframes`
   }
 `;
 
-const CelebrationBanner = ({ currentUsers }) => {
+const CelebrationBanner = () => {
   const [isBannerOpen, setBannerOpen] = useState(true);
-  const totalTarget = 60;
-  const usersRemaining = totalTarget - currentUsers;
+  // const totalTarget = 60;
+  // const usersRemaining = totalTarget - currentUsers;
 
   const handleClose = () => {
     setBannerOpen(false);
   };
 
   useEffect(() => {
-    if (usersRemaining > 0 && isBannerOpen) {
+    if (isBannerOpen) {
       // Add confetti animation on mount
       const confetti = document.createElement("div");
       confetti.classList.add("confetti");
@@ -34,9 +34,9 @@ const CelebrationBanner = ({ currentUsers }) => {
       }, 5000);
       return () => clearTimeout(timeout); // Remove after 2 seconds
     }
-  }, [isBannerOpen, usersRemaining]);
+  }, [isBannerOpen]);
 
-  if (!isBannerOpen || usersRemaining <= 0) return null;
+  if (!isBannerOpen) return null;
 
   return (
     <Box
@@ -63,8 +63,7 @@ const CelebrationBanner = ({ currentUsers }) => {
           fontFamily: "poppins, sans-serif",
         }}
       >
-        🎉 Only {usersRemaining} users left to reach {totalTarget} and earn
-        swags!
+        🎉Successfully Achieved the Tier-2 Status.
       </Typography>
       <IconButton
         color="inherit"
